@@ -96,7 +96,7 @@ describe("ResultsSummary", () => {
     renderWithQuery(<ResultsSummary jobData={completedJob} />)
     expect(await screen.findByText("Rejection Reasons")).toBeInTheDocument()
     expect(await screen.findByText("invalid_price")).toBeInTheDocument()
-    expect(await screen.findByText("missing_required")).toBeInTheDocument()
+    expect((await screen.findAllByText("missing_required")).length).toBeGreaterThan(0)
   })
 
   it("shows per-file breakdown", async () => {

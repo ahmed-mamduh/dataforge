@@ -21,7 +21,7 @@ describe("DropZone", () => {
     const file = makeFile("data.csv", 2048)
     render(<DropZone files={[file]} onFilesChange={() => {}} />)
     expect(screen.getByText("data.csv")).toBeInTheDocument()
-    expect(screen.getByText("2.0 KB")).toBeInTheDocument()
+    expect(screen.getByText("2.0 KB · Ready")).toBeInTheDocument()
   })
 
   it("calls onFilesChange when removing a file", async () => {
@@ -31,8 +31,7 @@ describe("DropZone", () => {
     render(<DropZone files={files} onFilesChange={onChange} />)
 
     // The X buttons are the ones inside file cards (not Browse files)
-    const xButtons = screen.getAllByRole("button", { name: "" })
-    await user.click(xButtons[0])
+    await user.click(screen.getByRole("button", { name: "Remove a.csv" }))
     expect(onChange).toHaveBeenCalledWith([files[1]])
   })
 

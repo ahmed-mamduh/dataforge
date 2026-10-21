@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { Table2, ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { getJobPreview } from "@/api/client"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 
 interface DataPreviewProps {
   jobId: string
@@ -11,14 +11,7 @@ interface DataPreviewProps {
 
 const PAGE_SIZE = 20
 
-function escapeText(val: string): string {
-  return val
-}
-
 export function DataPreview({ jobId }: DataPreviewProps) {
-  const [tab, setTab] = useState<"cleaned" | "rejected">("cleaned")
-  const [page, setPage] = useState(0)
-
   const { data, isLoading } = useQuery({
     queryKey: ["preview", jobId],
     queryFn: () => getJobPreview(jobId, 100),
@@ -26,73 +19,95 @@ export function DataPreview({ jobId }: DataPreviewProps) {
 
   if (isLoading || !data) {
     return (
-      <div className="flex items-center justify-center py-8 text-muted-foreground text-sm">
+      <div className="rounded-[18px] border border-border bg-white py-10 text-center text-sm text-slate">
         Loading preview...
       </div>
     )
   }
 
-  const rows = tab === "cleaned" ? data.cleaned : data.rejected
-  const total = tab === "cleaned" ? data.cleaned_total : data.rejected_total
+  return (
+    <section className="space-y-4">
+      <div>
+        <h2 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
+          <span className="text-navy">From flagged rows to </span>
+          <span className="text-emerald">clean, reliable results</span>
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate sm:text-base">
+          Rejected rows are the records the engine flagged. Cleaned rows are the records that passed validation.
+          Both come from the job preview — the left table is not a reconstruction of the original file.
+        </p>
+      </div>
+      <div className="grid gap-4 xl:grid-cols-2">
+        <RecordTable
+          title="Rejected · flagged rows"
+          tone="danger"
+          rows={data.rejected}
+          total={data.rejected_total}
+        />
+        <RecordTable
+          title="Cleaned · validated rows"
+          tone="success"
+          rows={data.cleaned}
+          total={data.cleaned_total}
+        />
+      </div>
+    </section>
+  )
+}
+
+function RecordTable({
+  title,
+  tone,
+  rows,
+  total,
+}: {
+  title: string
+  tone: "success" | "danger"
+  rows: Record<string, string>[]
+  total: number
+}) {
+  const [page, setPage] = useState(0)
   const columns = rows.length > 0 ? Object.keys(rows[0]) : []
   const pageStart = page * PAGE_SIZE
   const pageRows = rows.slice(pageStart, pageStart + PAGE_SIZE)
-  const totalPages = Math.ceil(rows.length / PAGE_SIZE)
+  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE))
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        <Table2 className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm font-medium">Data Preview</span>
-      </div>
-
-      <div className="flex gap-2">
-        <button
-          onClick={() => { setTab("cleaned"); setPage(0) }}
-          className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-            tab === "cleaned"
-              ? "bg-primary text-primary-foreground"
-              : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-          }`}
+    <div
+      className={cn(
+        "overflow-hidden rounded-[18px] border bg-white shadow-[var(--shadow-card)]",
+        tone === "success" ? "border-emerald/25" : "border-destructive/25",
+      )}
+    >
+      <div className="flex items-center justify-between gap-3 px-4 pt-4">
+        <h3
+          className={cn(
+            "rounded-full px-3 py-1 text-xs font-bold tracking-wide",
+            tone === "success" ? "bg-pale text-emerald" : "bg-destructive/10 text-destructive",
+          )}
         >
-          Cleaned
-          <Badge variant="secondary" className="ml-2 text-xs">
-            {data.cleaned_total}
-          </Badge>
-        </button>
-        <button
-          onClick={() => { setTab("rejected"); setPage(0) }}
-          className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-            tab === "rejected"
-              ? "bg-destructive text-destructive-foreground"
-              : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-          }`}
+          {title}
+        </h3>
+        <span
+          className={cn(
+            "flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold",
+            tone === "success" ? "bg-pale text-emerald" : "bg-destructive/10 text-destructive",
+          )}
+          aria-label={`${total} rows`}
         >
-          Rejected
-          <Badge variant="secondary" className="ml-2 text-xs">
-            {data.rejected_total}
-          </Badge>
-        </button>
+          {total > 99 ? "99+" : total}
+        </span>
       </div>
-
       {rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground py-4 text-center">
-          No {tab} records.
-        </p>
+        <p className="px-4 py-8 text-center text-sm text-slate">No records in this preview.</p>
       ) : (
         <>
-          <div className="rounded-lg border overflow-x-auto">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b bg-muted/50">
-                  <th className="px-3 py-2 text-left font-medium text-muted-foreground w-10">
-                    #
-                  </th>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[28rem] text-left text-xs">
+              <thead className="bg-canvas">
+                <tr className="border-b border-border">
                   {columns.map((col) => (
-                    <th
-                      key={col}
-                      className="px-3 py-2 text-left font-medium text-muted-foreground whitespace-nowrap"
-                    >
+                    <th key={col} scope="col" className="whitespace-nowrap px-3 py-2.5 font-semibold text-slate">
                       {col}
                     </th>
                   ))}
@@ -100,48 +115,50 @@ export function DataPreview({ jobId }: DataPreviewProps) {
               </thead>
               <tbody>
                 {pageRows.map((row, i) => (
-                  <tr key={pageStart + i} className="border-b last:border-0 hover:bg-muted/30">
-                    <td className="px-3 py-2 text-muted-foreground">
-                      {pageStart + i + 1}
-                    </td>
-                    {columns.map((col) => (
-                      <td
-                        key={col}
-                        className="px-3 py-2 max-w-[200px] truncate"
-                        title={escapeText(row[col] || "")}
-                      >
-                        {escapeText(row[col] || "")}
-                      </td>
-                    ))}
+                  <tr
+                    key={pageStart + i}
+                    className={cn(
+                      "border-b border-border/70 last:border-0",
+                      tone === "success" ? "hover:bg-pale/60" : "bg-destructive/[0.03] hover:bg-destructive/[0.07]",
+                    )}
+                  >
+                    {columns.map((col) => {
+                      const value = row[col] ?? ""
+                      return (
+                        <td key={col} className="max-w-[14rem] truncate px-3 py-2.5 text-navy" title={value}>
+                          {value}
+                        </td>
+                      )
+                    })}
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center justify-between border-t border-border px-3 py-2 text-xs text-slate">
             <span>
-              Showing {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, rows.length)} of{" "}
-              {rows.length} rows
-              {total > rows.length && ` (${total} total)`}
+              {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, rows.length)} of {rows.length}
+              {total > rows.length ? ` shown (${total} total)` : ""}
             </span>
             {totalPages > 1 && (
               <div className="flex gap-1">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7"
-                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  className="h-8 w-8"
+                  onClick={() => setPage((current) => Math.max(0, current - 1))}
                   disabled={page === 0}
+                  aria-label={`Previous ${title} page`}
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7"
-                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                  className="h-8 w-8"
+                  onClick={() => setPage((current) => Math.min(totalPages - 1, current + 1))}
                   disabled={page >= totalPages - 1}
+                  aria-label={`Next ${title} page`}
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>

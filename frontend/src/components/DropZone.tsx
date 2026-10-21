@@ -76,7 +76,7 @@ export function DropZone({ files, onFilesChange, disabled }: DropZoneProps) {
   )
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div
         onDragOver={(e) => {
           e.preventDefault()
@@ -85,60 +85,65 @@ export function DropZone({ files, onFilesChange, disabled }: DropZoneProps) {
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
         className={cn(
-          "flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors",
+          "flex flex-col items-center justify-center rounded-[20px] border border-dashed px-6 py-12 text-center transition-colors",
           dragOver && !disabled
-            ? "border-primary bg-primary/5"
-            : "border-border hover:border-primary/50",
-          disabled && "opacity-50 cursor-not-allowed",
+            ? "border-emerald bg-pale"
+            : "border-emerald/40 bg-gradient-to-b from-pale/80 to-white",
+          disabled && "cursor-not-allowed opacity-60",
         )}
       >
-        <Upload className="h-10 w-10 text-muted-foreground mb-3" />
-        <p className="text-sm font-medium text-foreground mb-1">
-          Drag & drop your files here
-        </p>
-        <p className="text-xs text-muted-foreground mb-4">
-          CSV or XLSX — up to 3 files, 10 MB each
+        <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-pale text-emerald">
+          <Upload className="h-6 w-6" aria-hidden />
+        </span>
+        <p className="text-base font-semibold text-navy">Drag & drop your files here</p>
+        <p className="mt-1 max-w-sm text-sm text-slate">
+          CSV or XLSX. Up to 3 files, 10 MB each. Column names are matched automatically.
         </p>
         <Button
-          variant="outline"
           size="sm"
           onClick={handleBrowse}
           disabled={disabled}
           type="button"
+          className="mt-5"
         >
           Browse files
         </Button>
       </div>
 
       {error && (
-        <p className="text-sm text-destructive font-medium">{error}</p>
+        <p role="alert" className="rounded-xl bg-destructive/10 px-3 py-2 text-sm font-medium text-destructive">
+          {error}
+        </p>
       )}
 
       {files.length > 0 && (
-        <div className="space-y-2">
+        <ul className="space-y-2">
           {files.map((file, i) => (
-            <div
+            <li
               key={`${file.name}-${i}`}
-              className="flex items-center gap-3 rounded-lg border bg-card p-3"
+              className="flex items-center gap-3 rounded-2xl border border-border bg-white px-4 py-3"
             >
-              <FileSpreadsheet className="h-5 w-5 text-primary shrink-0" />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{file.name}</p>
-                <p className="text-xs text-muted-foreground">
-                  {(file.size / 1024).toFixed(1)} KB
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pale text-emerald">
+                <FileSpreadsheet className="h-5 w-5" aria-hidden />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-navy">{file.name}</p>
+                <p className="text-xs text-slate">
+                  {`${(file.size / 1024).toFixed(1)} KB · Ready`}
                 </p>
               </div>
               <button
                 onClick={() => removeFile(i)}
                 disabled={disabled}
-                className="text-muted-foreground hover:text-destructive transition-colors"
+                className="rounded-lg p-2 text-slate transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
                 type="button"
+                aria-label={`Remove ${file.name}`}
               >
                 <X className="h-4 w-4" />
               </button>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   )

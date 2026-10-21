@@ -42,38 +42,41 @@ export function MappingConfig({ value, onChange, disabled }: MappingConfigProps)
     try {
       const parsed = JSON.parse(raw)
       if (!parsed.mappings || !Array.isArray(parsed.mappings)) {
-        setError("JSON must have a 'mappings' array")
+        setError("The configuration needs a mappings list. Leave this blank to use automatic matching.")
       } else {
         setError(null)
       }
     } catch {
-      setError("Invalid JSON")
+      setError("This is not valid JSON. Check commas and quotes, or clear the field to use automatic matching.")
     }
   }
 
   return (
-    <div className="rounded-lg border bg-card">
+    <div className="overflow-hidden rounded-2xl border border-border bg-white">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 w-full p-4 text-left hover:bg-accent/50 transition-colors rounded-lg"
+        aria-expanded={open}
+        className="flex w-full items-center gap-3 px-4 py-4 text-left transition-colors hover:bg-pale/60"
       >
-        <Settings2 className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm font-medium flex-1">
-          Custom column mapping
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-pale text-emerald">
+          <Settings2 className="h-4 w-4" aria-hidden />
         </span>
-        <span className="text-xs text-muted-foreground mr-2">Optional</span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-semibold text-navy">Advanced Column Mapping</span>
+          <span className="block text-xs text-slate">Optional. Automatic matching is used when this is empty.</span>
+        </span>
         {open ? (
-          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+          <ChevronUp className="h-4 w-4 text-slate" aria-hidden />
         ) : (
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          <ChevronDown className="h-4 w-4 text-slate" aria-hidden />
         )}
       </button>
       {open && (
-        <div className="px-4 pb-4 space-y-3">
-          <p className="text-xs text-muted-foreground">
-            Provide a JSON mapping if your columns don't match the defaults.
-            Leave empty for auto-detection.
+        <div className="space-y-3 border-t border-border px-4 py-4">
+          <p className="text-xs leading-relaxed text-slate">
+            Paste a JSON mapping only when your column names do not match the built-in synonyms.
+            Each entry maps a source header to a canonical field such as sku, price, or quantity.
           </p>
           <textarea
             value={value}
@@ -81,7 +84,8 @@ export function MappingConfig({ value, onChange, disabled }: MappingConfigProps)
             disabled={disabled}
             placeholder={EXAMPLE_CONFIG}
             rows={8}
-            className="w-full rounded-md border bg-background px-3 py-2 text-xs font-mono resize-y focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
+            aria-label="Column mapping JSON"
+            className="w-full resize-y rounded-xl border border-border bg-canvas px-3 py-2 font-mono text-xs text-navy focus:outline-none focus:ring-2 focus:ring-emerald disabled:opacity-50"
           />
           {error && <p className="text-xs text-destructive">{error}</p>}
           {!value.trim() && (
