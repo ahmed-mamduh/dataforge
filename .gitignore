@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+.env
+.pytest_cache/
+
+# Node / Frontend
+node_modules/
+frontend/dist/
+
+# Outputs (generated at runtime)
+output/
+output_excel/
+
+# IDE and tooling
+.claude/
+.vscode/
+.idea/
+
+# Internal scaffolding (not part of the project)
+prompts/
+START_HERE.md
+PORTFOLIO_CASE_STUDY_TEMPLATE.md
+/screenshots/

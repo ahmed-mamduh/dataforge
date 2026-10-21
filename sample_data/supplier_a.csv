@@ -1,0 +1,42 @@
+﻿SKU,Product Name,Category,Unit Price,Currency,Qty,Supplier,Description
+SA-0001,Stainless Steel Water Bottle 750ml,Drinkware,12.99,USD,3,Supplier A,Stainless Steel Water Bottle 750ml - demo item
+SA-0002,Thermal Flask 1L,Home Storage,19.99,USD,6,Supplier A,Thermal Flask 1L - demo item
+SA-0003,Ceramic Mug Blue,Travel,26.99,USD,9,Supplier A,Ceramic Mug Blue - demo item
+SA-0004,Glass Tumbler 350ml,Kitchen,33.99,USD,12,Supplier A,Glass Tumbler 350ml - demo item
+SA-0005,Insulated Lunch Box,Drinkware,40.99,USD,15,Supplier A,Insulated Lunch Box - demo item
+SA-0006,  Tea Infuser Mesh  ,Home Storage,47.99,USD,18,Supplier A,Tea Infuser Mesh - demo item
+SA-0007,Travel Coffee Cup,Travel,54.99,USD,21,Supplier A,Travel Coffee Cup - demo item
+SA-0008,Digital Kitchen Scale,Kitchen,61.99,USD,24,Supplier A,Digital Kitchen Scale - demo item
+SA-0009,Bamboo Cutting Board,Drinkware,5.99,USD,27,Supplier A,Bamboo Cutting Board - demo item
+SA-0010,Reusable Silicone Bag,Home Storage,12.99,USD,30,Supplier A,Reusable Silicone Bag - demo item
+SA-0011,Vacuum Food Container,Travel,bad-price,USD,33,Supplier A,Vacuum Food Container - demo item
+SA-0012,  Cotton Grocery Tote  ,Kitchen,26.99,USD,36,Supplier A,Cotton Grocery Tote - demo item
+SA-0013,Dish Drying Mat,Drinkware,33.99,USD,39,Supplier A,Dish Drying Mat - demo item
+SA-0014,Stackable Storage Bin,Home Storage,40.99,USD,42,Supplier A,Stackable Storage Bin - demo item
+SA-0015,Mini Measuring Set,Travel,47.99,USD,0,Supplier A,Mini Measuring Set - demo item
+SA-0016,Stainless Steel Water Bottle 750ml,Kitchen,-9.99,USD,3,Supplier A,Stainless Steel Water Bottle 750ml - demo item
+SA-0017,Thermal Flask 1L,Drinkware,61.99,USD,6,Supplier A,Thermal Flask 1L - demo item
+SA-0018,  Ceramic Mug Blue  ,Home Storage,5.99,USD,9,Supplier A,Ceramic Mug Blue - demo item
+SA-0019,Glass Tumbler 350ml,Travel,12.99,USD,12,Supplier A,Glass Tumbler 350ml - demo item
+SA-0020,Insulated Lunch Box,Kitchen,19.99,USD,15,Supplier A,Insulated Lunch Box - demo item
+SA-0021,Tea Infuser Mesh,Drinkware,26.99,USD,18,Supplier A,Tea Infuser Mesh - demo item
+,Travel Coffee Cup,Home Storage,33.99,USD,21,Supplier A,Travel Coffee Cup - demo item
+SA-0023,Digital Kitchen Scale,Travel,40.99,USD,24,Supplier A,Digital Kitchen Scale - demo item
+SA-0024,  Bamboo Cutting Board  ,Kitchen,47.99,USD,27,Supplier A,Bamboo Cutting Board - demo item
+SA-0025,Reusable Silicone Bag,Drinkware,54.99,USD,30,Supplier A,Reusable Silicone Bag - demo item
+SA-0026,Vacuum Food Container,Home Storage,61.99,USD,33,Supplier A,Vacuum Food Container - demo item
+SA-0027,Cotton Grocery Tote,Travel,5.99,USD,-3,Supplier A,Cotton Grocery Tote - demo item
+SA-0028,Dish Drying Mat,Kitchen,12.99,USD,39,Supplier A,Dish Drying Mat - demo item
+SA-0029,Stackable Storage Bin,Drinkware,19.99,USD,42,Supplier A,Stackable Storage Bin - demo item
+SA-0030,  Mini Measuring Set  ,Home Storage,26.99,USD,0,Supplier A,Mini Measuring Set - demo item
+SA-0031,  ,Travel,33.99,USD,3,Supplier A,Stainless Steel Water Bottle 750ml - demo item
+SA-0032,Thermal Flask 1L,Kitchen,40.99,USD,6,Supplier A,Thermal Flask 1L - demo item
+SA-0033,Ceramic Mug Blue,Drinkware,47.99,USD,9,Supplier A,Ceramic Mug Blue - demo item
+SA-0034,Glass Tumbler 350ml,Home Storage,54.99,USD,12,Supplier A,Glass Tumbler 350ml - demo item
+SA-0035,Insulated Lunch Box,Travel,61.99,USD,15,Supplier A,Insulated Lunch Box - demo item
+SA-0036,  Tea Infuser Mesh  ,Kitchen,5.99,USD,18,Supplier A,Tea Infuser Mesh - demo item
+SA-0037,Travel Coffee Cup,Drinkware,12.99,USD,21,Supplier A,Travel Coffee Cup - demo item
+SA-0038,Digital Kitchen Scale,Home Storage,19.99,USD,24,Supplier A,Digital Kitchen Scale - demo item
+SA-0039,Bamboo Cutting Board,Travel,26.99,USD,27,Supplier A,Bamboo Cutting Board - demo item
+SA-0040,Reusable Silicone Bag,Kitchen,33.99,USD,30,Supplier A,Reusable Silicone Bag - demo item
+SA-0007,Travel Coffee Cup,Travel,54.99,USD,21,Supplier A,Travel Coffee Cup - demo item
