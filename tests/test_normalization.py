@@ -66,6 +66,22 @@ class TestParsePrice:
     def test_not_a_number(self) -> None:
         assert parse_price("not-known") is None
 
+    def test_comma_decimal_rejected(self) -> None:
+        assert parse_price("12,99") is None
+
+    def test_european_format_rejected(self) -> None:
+        assert parse_price("1.234,50") is None
+
+    def test_malformed_thousands_rejected(self) -> None:
+        assert parse_price("1,234,50") is None
+        assert parse_price("12,3456") is None
+
+    def test_us_thousands_without_decimal(self) -> None:
+        assert parse_price("1,234") == Decimal("1234")
+
+    def test_plain_decimal(self) -> None:
+        assert parse_price("1234.50") == Decimal("1234.50")
+
 
 class TestNormalizeCurrency:
     def test_uppercase(self) -> None:
@@ -114,3 +130,9 @@ class TestNormalizeDataframe:
         df = pd.DataFrame({"price": ["$1,234.50"]})
         result = normalize_dataframe(df)
         assert result["_original_price"].iloc[0] == "$1,234.50"
+
+    def test_comma_decimal_becomes_invalid_price(self) -> None:
+        df = pd.DataFrame({"price": ["12,99"]})
+        result = normalize_dataframe(df)
+        assert result["price"].iloc[0] is None
+        assert result["_original_price"].iloc[0] == "12,99"

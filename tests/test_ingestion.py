@@ -48,6 +48,13 @@ def test_unsupported_extension(tmp_path: Path) -> None:
         read_file(bad)
 
 
+def test_legacy_xls_not_supported(tmp_path: Path) -> None:
+    legacy = tmp_path / "legacy.xls"
+    legacy.write_bytes(b"\x00\x00")
+    with pytest.raises(IngestionError, match="Unsupported"):
+        read_file(legacy)
+
+
 def test_file_not_found() -> None:
     with pytest.raises(IngestionError, match="not found"):
         read_file(Path("nonexistent.csv"))

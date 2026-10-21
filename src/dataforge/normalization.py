@@ -7,6 +7,12 @@ from decimal import Decimal, InvalidOperation
 
 import pandas as pd
 
+_CURRENCY_SYMBOLS = re.compile(r"[£€$¥]")
+_US_THOUSANDS_ONLY = re.compile(r"^\d{1,3}(,\d{3})+$")
+_US_WITH_DECIMAL = re.compile(r"^\d{1,3}(,\d{3})*\.\d+$")
+_PLAIN_DECIMAL = re.compile(r"^\d+\.\d+$")
+_PLAIN_INTEGER = re.compile(r"^\d+$")
+
 
 def normalize_whitespace(value: str) -> str:
     """Strip leading/trailing whitespace and collapse internal runs."""
@@ -15,11 +21,43 @@ def normalize_whitespace(value: str) -> str:
     return re.sub(r"\s+", " ", value.strip())
 
 
-def parse_price(value: str) -> Decimal | None:
-    """Parse a price string to Decimal.
+def _parse_us_number_body(body: str) -> str | None:
+    """Parse an unsigned US-style numeric string. Returns normalized text for Decimal."""
+    if not body or not re.fullmatch(r"[\d.,]+", body):
+        return None
 
-    Handles: currency symbols, thousands commas, whitespace.
-    Returns None for unparseable values (N/A, bad-price, empty, etc.).
+    if "," in body and "." in body:
+        if body.rfind(",") > body.rfind("."):
+            return None
+        if not _US_WITH_DECIMAL.fullmatch(body):
+            return None
+        return body.replace(",", "")
+
+    if "," in body:
+        if not _US_THOUSANDS_ONLY.fullmatch(body):
+            return None
+        return body.replace(",", "")
+
+    if body.count(".") > 1:
+        return None
+
+    if "." in body:
+        if not _PLAIN_DECIMAL.fullmatch(body):
+            return None
+        return body
+
+    if _PLAIN_INTEGER.fullmatch(body):
+        return body
+
+    return None
+
+
+def parse_price(value: str) -> Decimal | None:
+    """Parse a price string to Decimal using unambiguous US number formats.
+
+    Supports plain decimals (1234.50), US thousands separators (1,234.50),
+    and currency symbols. Comma-decimal values (e.g. 12,99) and European
+    grouping (e.g. 1.234,50) are rejected rather than reinterpreted.
     """
     if not isinstance(value, str):
         return None
@@ -28,14 +66,30 @@ def parse_price(value: str) -> Decimal | None:
     if not cleaned:
         return None
 
-    cleaned = re.sub(r"[£€$¥]", "", cleaned).strip()
+    cleaned = _CURRENCY_SYMBOLS.sub("", cleaned).strip()
+    if not cleaned:
+        return None
 
-    cleaned = cleaned.replace(",", "")
+    negative = False
+    if cleaned[0] == "-":
+        negative = True
+        cleaned = cleaned[1:].strip()
+    elif cleaned[0] == "+":
+        cleaned = cleaned[1:].strip()
+
+    if not cleaned:
+        return None
+
+    normalized = _parse_us_number_body(cleaned)
+    if normalized is None:
+        return None
 
     try:
-        return Decimal(cleaned)
+        amount = Decimal(normalized)
     except InvalidOperation:
         return None
+
+    return -amount if negative else amount
 
 
 def normalize_currency(value: str) -> str:

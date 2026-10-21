@@ -14,7 +14,7 @@ Teams that receive product data from multiple suppliers deal with inconsistent c
 
 ## Features
 
-- **Multi-schema ingestion** — CSV (auto-detected encoding) and Excel files with different column layouts
+- **Multi-schema ingestion** — CSV (auto-detected encoding) and Excel (.xlsx) files with different column layouts
 - **Auto-detected column mapping** — resolves synonyms like `Item Code` → `sku`, `Vendor` → `supplier`
 - **Price & currency normalization** — handles `$`, `€`, thousands commas; rejects ambiguous values
 - **Decimal precision** — Python `Decimal` for monetary values, no floating-point drift
@@ -68,7 +68,7 @@ Teams that receive product data from multiple suppliers deal with inconsistent c
 ### Prerequisites
 
 - Python 3.12+
-- Node.js 18+ and npm
+- Node.js 20.19+ or 22.12+ and npm (required by Vite 8)
 
 ### Backend
 

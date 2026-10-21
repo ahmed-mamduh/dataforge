@@ -96,6 +96,14 @@ class TestJobCreation:
         assert resp.status_code == 400
         assert "Unsupported file type" in resp.json()["detail"]
 
+    def test_legacy_xls_rejected(self, client: TestClient) -> None:
+        resp = client.post(
+            "/api/v1/jobs",
+            files=[("files", ("legacy.xls", b"\x00\x00", "application/vnd.ms-excel"))],
+        )
+        assert resp.status_code == 400
+        assert "Unsupported file type" in resp.json()["detail"]
+
     def test_empty_file(self, client: TestClient) -> None:
         resp = client.post(
             "/api/v1/jobs",

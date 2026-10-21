@@ -58,9 +58,6 @@ export function JobProgress({ jobId, onComplete }: JobProgressProps) {
   const config = STATUS_CONFIG[status]
   const Icon = config.icon
 
-  const progressValue =
-    status === "queued" ? 15 : status === "running" ? 60 : status === "completed" ? 100 : 0
-
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
@@ -80,7 +77,14 @@ export function JobProgress({ jobId, onComplete }: JobProgressProps) {
           <p className="text-xs text-muted-foreground mt-0.5">Job ID: {jobId}</p>
         </div>
       </div>
-      <Progress value={progressValue} />
+
+      {status === "queued" || status === "running" ? (
+        <Progress indeterminate />
+      ) : status === "completed" ? (
+        <Progress value={100} max={100} variant="success" />
+      ) : (
+        <Progress value={100} max={100} variant="destructive" aria-label="Job failed" />
+      )}
 
       {data?.error && (
         <p className="text-sm text-destructive bg-destructive/10 rounded-md p-3">

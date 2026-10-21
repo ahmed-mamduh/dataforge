@@ -3,7 +3,7 @@ import { Upload, X, FileSpreadsheet } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
-const ALLOWED_EXTENSIONS = [".csv", ".xlsx", ".xls"]
+const ALLOWED_EXTENSIONS = [".csv", ".xlsx"]
 const MAX_FILE_SIZE = 10 * 1024 * 1024
 const MAX_FILES = 3
 
@@ -26,7 +26,7 @@ export function DropZone({ files, onFilesChange, disabled }: DropZoneProps) {
     for (const f of incoming) {
       const ext = f.name.slice(f.name.lastIndexOf(".")).toLowerCase()
       if (!ALLOWED_EXTENSIONS.includes(ext)) {
-        setError(`Unsupported file type: ${ext}. Use .csv, .xlsx, or .xls`)
+        setError(`Unsupported file type: ${ext}. Use .csv or .xlsx`)
         return null
       }
       if (f.size > MAX_FILE_SIZE) {
@@ -97,7 +97,7 @@ export function DropZone({ files, onFilesChange, disabled }: DropZoneProps) {
           Drag & drop your files here
         </p>
         <p className="text-xs text-muted-foreground mb-4">
-          CSV, XLSX, or XLS — up to 3 files, 10 MB each
+          CSV or XLSX — up to 3 files, 10 MB each
         </p>
         <Button
           variant="outline"

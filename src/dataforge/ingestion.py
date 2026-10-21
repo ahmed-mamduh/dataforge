@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pandas as pd
 
-SUPPORTED_EXTENSIONS = {".csv", ".xlsx", ".xls"}
+SUPPORTED_EXTENSIONS = {".csv", ".xlsx"}
 CSV_ENCODINGS = ["utf-8-sig", "utf-8", "latin-1"]
 
 
@@ -30,8 +30,10 @@ def read_file(path: Path) -> pd.DataFrame:
 
     if ext == ".csv":
         df = _read_csv(path)
-    else:
+    elif ext == ".xlsx":
         df = _read_excel(path)
+    else:
+        raise IngestionError(f"Unsupported file type: {ext}")
 
     df["_source_file"] = path.name
     df["_source_row"] = range(2, len(df) + 2)  # 1-based, header is row 1
